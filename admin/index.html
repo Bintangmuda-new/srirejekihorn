@@ -21,23 +21,23 @@
 </div>
 <script>
 (async()=>{
-  try{
-    let u="";
-    const r=await fetch("https://api.github.com/repos/Bintangmuda-new/srirejekihorn/contents/tunnel.json?t="+Date.now(),{cache:"no-store"});
-    if(r.ok){
-      const j=await r.json();
-      const d=JSON.parse(atob(j.content.replace(/\s/g,"")));
-      u=d.url;
-    }else{
-      const r2=await fetch("../tunnel.json?t="+Date.now(),{cache:"no-store"});
-      const d2=await r2.json();
-      u=d2.url;
-    }
-    if(u){location.replace(u.replace(/\/$/,"")+"/admin");}
-    else{document.getElementById("msg").textContent="Server kantor sedang offline.";}
-  }catch(e){
-    document.getElementById("msg").textContent="Gagal menghubungi server kantor. Pastikan PC kantor menyala.";
+  const urls=[
+    "../tunnel.json?t="+Date.now(),
+    "https://raw.githubusercontent.com/Bintangmuda-new/srirejekihorn/main/tunnel.json?t="+Date.now()
+  ];
+  for(const src of urls){
+    try{
+      const r=await fetch(src,{cache:"no-store"});
+      if(r.ok){
+        const d=await r.json();
+        if(d&&d.url){
+          location.replace(d.url.replace(/\/$/,"")+"/admin");
+          return;
+        }
+      }
+    }catch(_){}
   }
+  document.getElementById("msg").textContent="Gagal menghubungi server kantor. Pastikan PC kantor menyala.";
 })();
 </script>
 </body>
