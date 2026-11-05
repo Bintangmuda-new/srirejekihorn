@@ -380,7 +380,34 @@ ol.st{grid-template-columns:repeat(4,1fr)}
 <details><summary data-i18n="fq2_q">Bagaimana sistem pembayarannya?</summary><p data-i18n="fq2_a">DP 5% saat Open PO dan pelunasan saat loading. Untuk skema lain, hubungi kami lebih dulu.</p></details>
 <details><summary data-i18n="fq3_q">Berapa harga telur hari ini?</summary><p data-i18n="fq3_a">Harga mengikuti pasar harian dan bisa dinegosiasikan sesuai volume. Lihat papan harga di bagian atas, atau minta penawaran lewat WhatsApp.</p></details>
 <details><summary data-i18n="fq4_q">Dikirim ke mana saja?</summary><p data-i18n="fq4_a">Seluruh Indonesia. Jalur darat untuk area terjangkau, dan ekspedisi lewat pelabuhan untuk tujuan luar pulau.</p></details>
-<details><summary data-i18n="fq5_q">Bagaimana jika ada telur pecah saat sampai?</summary><p data-i18n="f<script>
+<details><summary data-i18n="fq5_q">Bagaimana jika ada telur pecah saat sampai?</summary><p data-i18n="fq5_a">Kirim foto atau video saat bongkar muat dan lapor lewat WhatsApp maksimal 1×24 jam setelah barang diterima. Toleransi pecah dan ganti rugi tercantum di PO.</p></details>
+<details><summary data-i18n="fq6_q">Apakah melayani SPPG?</summary><p data-i18n="fq6_a">Ya. Lewat skema pasokan rutin, SPPG mendapat jadwal kirim tetap dan prioritas stok.</p></details>
+</div>
+</div></section>
+
+<section id="tentang"><div class="w">
+<h2 data-i18n="t_title">Sejak 2000, memasok telur ke seluruh Nusantara</h2>
+<div style="max-width:64ch">
+<p style="margin:14px 0" data-i18n-html="t_p1"><b>CV. SRI REJEKI HORN JEMBER</b> berdiri tahun 2000 sebagai distributor telur ayam di Jember, Jawa Timur. Lebih dari 26 tahun kami menyalurkan pasokan telur untuk toko, pengepul, dan SPPG di berbagai wilayah Indonesia.</p>
+<p style="margin:14px 0" data-i18n="t_p2">Keandalan pasokan dan ketepatan waktu pengiriman adalah fondasi kemitraan kami. Melalui kapasitas operasional 20 ton per hari, proses sortir yang ketat, serta dukungan dokumen resmi, kami memastikan setiap pengiriman tiba dalam kondisi layak niaga.</p>
+<p class="mu" data-i18n="t_p3">Dipimpin oleh Bpk. Mudjiono dan Ibu Sri Hastuti.</p>
+</div>
+</div></section>
+
+<section id="kontak"><div class="w">
+<h2 data-i18n="ct_title">Hubungi kami</h2>
+<p class="mu" style="margin-bottom:22px" data-i18n="ct_sub">Kami balas pada jam kerja. Sebutkan kebutuhan dan kota tujuan.</p>
+<dl class="dl">
+<div><dt>WhatsApp</dt><dd><a href="https://wa.me/6282254516460" data-wa="kontak">0822 5451 6460</a></dd></div>
+<div><dt>Email</dt><dd><a href="mailto:cv.srhj@gmail.com">cv.srhj@gmail.com</a></dd></div>
+<div><dt data-i18n="ct_wh">WORKSHOP CV.SRHJ</dt><dd><a href="https://maps.app.goo.gl/BTKvcXwii4c3Adtq9" rel="noopener">Peji, Lengkong, Kec. Mumbulsari, Kabupaten Jember, Jawa Timur 68174</a></dd></div>
+</dl>
+<div class="bs" style="margin-top:26px"><a class="btn p" data-wa="kontak-btn" data-i18n="ct_btn" href="https://wa.me/6282254516460">Chat WhatsApp</a></div>
+<iframe class="mp" loading="lazy" title="Peta lokasi WORKSHOP CV. SRI REJEKI HORN JEMBER" src="https://maps.google.com/maps?q=Peji,+Lengkong,+Mumbulsari,+Jember&amp;output=embed" referrerpolicy="no-referrer-when-downgrade"></iframe>
+</div></section>
+</main>
+<footer class="ft"><div class="w" style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px"><span>© <span id="cy">2026</span> CV. SRI REJEKI HORN JEMBER · <span data-i18n="ft_sub">Distributor Telur Ayam Nasional, Jember, Jawa Timur.</span></span><a href="admin" style="color:var(--y);text-decoration:none;font-weight:700" data-i18n="ft_adm">Login Admin</a></div></footer>
+<script>
 const D={galeri:[],testimoni:[],dokumen:[]};
 const N="6282254516460",$=s=>document.querySelector(s);
 const e=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -812,8 +839,7 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
   if(rngKg)rngKg.addEventListener("input",()=>{inpKg.value=rngKg.value;updateCalc(false);});
   document.querySelectorAll(".chip-btn").forEach(b=>b.addEventListener("click",()=>{
     inpKg.value=b.dataset.kg;
-    UPDATE_CALC_FN=updateCalc;
-  setLang(LANG);
+    updateCalc(false);
   }));
 
   UPDATE_CALC_FN=updateCalc;
