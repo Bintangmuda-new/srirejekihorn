@@ -1,5 +1,94 @@
 {
-  "tanggal": "",
-  "item": [],
-  "catatan": ""
+  "tanggal": "2026-11-05",
+  "jadwal_update": "Setiap hari pukul 07:00 WIB",
+  "terakhir_update_wib": "2026-11-05 22:32 WIB",
+  "sumber": "Siskaperbapo Disperindag Jatim & Workshop CV.SRHJ Jember",
+  "perubahan_hari_ini_rp": -79,
+  "item": [
+    {
+      "nama": "Telur Ayam Negeri (Grosir Workshop)",
+      "satuan": "kg",
+      "harga": 22200,
+      "kemarin": 22279
+    },
+    {
+      "nama": "Telur Kemasan Tray (Siap Pajang)",
+      "satuan": "kg",
+      "harga": 22700,
+      "kemarin": 22779
+    },
+    {
+      "nama": "Acuan Rata-Rata Pasar Jawa Timur",
+      "satuan": "kg",
+      "harga": 23460,
+      "kemarin": 23539
+    }
+  ],
+  "prediksi_besok": {
+    "tanggal": "2026-11-06",
+    "metode": "Holt Double Exponential Smoothing (Tren 30 Hari Jatim & Jember)",
+    "akurasi_persen": 99.83,
+    "rmse_rp": 51,
+    "arah": "STABIL",
+    "selisih_rp": -50,
+    "grosir_jember": 22150,
+    "rentang_min": 22050,
+    "rentang_max": 22250,
+    "tray_jember": 22650,
+    "rata_jatim": 23400,
+    "rekomendasi": "Pergerakan harga sangat stabil dengan volatilitas rendah."
+  },
+  "riwayat_10_hari": [
+    {
+      "tgl": "2026-10-27",
+      "jember": 22712,
+      "jatim": 23972
+    },
+    {
+      "tgl": "2026-10-28",
+      "jember": 22659,
+      "jatim": 23919
+    },
+    {
+      "tgl": "2026-10-29",
+      "jember": 22526,
+      "jatim": 23786
+    },
+    {
+      "tgl": "2026-10-30",
+      "jember": 22466,
+      "jatim": 23726
+    },
+    {
+      "tgl": "2026-10-31",
+      "jember": 22464,
+      "jatim": 23724
+    },
+    {
+      "tgl": "2026-11-01",
+      "jember": 22424,
+      "jatim": 23684
+    },
+    {
+      "tgl": "2026-11-02",
+      "jember": 22339,
+      "jatim": 23599
+    },
+    {
+      "tgl": "2026-11-03",
+      "jember": 22273,
+      "jatim": 23533
+    },
+    {
+      "tgl": "2026-11-04",
+      "jember": 22279,
+      "jatim": 23539
+    },
+    {
+      "tgl": "2026-11-05",
+      "jember": 22200,
+      "jatim": 23460
+    }
+  ],
+  "catatan": "Harga grosir di atas adalah patokan dasar partai besar di WORKSHOP CV.SRHJ (nego sesuai tonase PO)."
 }
