@@ -217,8 +217,8 @@ ol.st{grid-template-columns:repeat(4,1fr)}
 </div>
 <div class="map-leg">
   <span><i style="background:#ef4444"></i>WORKSHOP CV.SRHJ</span>
-  <span><i style="background:#4ade80"></i>Jalur Darat (Truk)</span>
-  <span><i style="background:#60a5fa"></i>Ekspedisi Laut (Pelabuhan)</span>
+  <span><i style="background:#4ade80"></i>🚛 Animasi Truk (Jalur Darat)</span>
+  <span><i style="background:#38bdf8"></i>🚢 Animasi Kapal Laut (Antarpulau)</span>
   <span><i style="background:#f0a500"></i>Rute Aktif Pilihan Anda (Klik Provinsi di Peta)</span>
 </div>
 <div class="calc-box">
@@ -472,28 +472,71 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
     return {el,r};
   });
 
-  function sendPulse(pathEl,color="#f0a500",dur=1700,rad=2.4){
+  function buildVehicleBody(mode,isHero){
+    if(mode==="darat"){
+      const boxCol=isHero?"#f0a500":"#4ade80";
+      const cabCol=isHero?"#ffffff":"#bbf7d0";
+      return `<ellipse cx="0" cy="4.5" rx="12" ry="3" fill="rgba(0,0,0,.45)"/>`
+        +`<path d="M11,-1 L22,-4 L22,3 Z" fill="rgba(254,240,138,.45)"/>`
+        +`<rect x="-11" y="-7.5" width="14" height="9.5" rx="1.6" fill="${boxCol}" stroke="#12110d" stroke-width="1"/>`
+        +`<line x1="-8" y1="-4.5" x2="0" y2="-4.5" stroke="#12110d" stroke-width="1" opacity=".45"/>`
+        +`<path d="M3,-5.5 L9,-5.5 L11.5,-1.5 L11.5,2 L3,2 Z" fill="${cabCol}" stroke="#12110d" stroke-width="1"/>`
+        +`<polygon points="4.5,-4.3 8.3,-4.3 10.2,-1.5 4.5,-1.5" fill="#0f172a"/>`
+        +`<circle cx="-6" cy="2.6" r="2.6" fill="#111827" stroke="#fff" stroke-width="1"/>`
+        +`<circle cx="7" cy="2.6" r="2.6" fill="#111827" stroke="#fff" stroke-width="1"/>`;
+    }else{
+      const hullCol=isHero?"#f0a500":"#38bdf8";
+      const deckCol=isHero?"#ffffff":"#bae6fd";
+      return `<path d="M-15,3.5 Q-7,6 0,3.5 T15,3.5" fill="none" stroke="#7dd3fc" stroke-width="1.3" opacity=".85"/>`
+        +`<rect x="-9.5" y="-5.5" width="5.5" height="4" rx=".6" fill="#f59e0b" stroke="#0f172a" stroke-width=".7"/>`
+        +`<rect x="-3.5" y="-6.5" width="5.5" height="5" rx=".6" fill="${deckCol}" stroke="#0f172a" stroke-width=".7"/>`
+        +`<rect x="2.5" y="-4.8" width="4.5" height="3.3" rx=".5" fill="#22c55e" stroke="#0f172a" stroke-width=".7"/>`
+        +`<rect x="-8.5" y="-9.2" width="4.5" height="3.5" rx=".5" fill="#ef4444" stroke="#0f172a" stroke-width=".7"/>`
+        +`<polygon points="-12,-1.5 13,-1.5 9.5,3.2 -9.5,3.2" fill="${hullCol}" stroke="#0f172a" stroke-width="1"/>`
+        +`<line x1="-8" y1=".8" x2="8" y2=".8" stroke="#0f172a" stroke-width=".9" opacity=".5"/>`;
+    }
+  }
+
+  function spawnVehicle(pathEl,mode="darat",dur=2600,isHero=false,startOffset=0){
     if(!pathEl)return;
-    const sp=document.createElementNS(NS,"circle");
-    sp.setAttribute("r",String(rad));
-    sp.setAttribute("class","spark");
-    sp.style.fill=color;
-    sp.style.filter=`drop-shadow(0 0 5px ${color})`;
-    sparkLayer.appendChild(sp);
+    const wrap=document.createElementNS(NS,"g");
+    wrap.setAttribute("class","spark");
+    const body=document.createElementNS(NS,"g");
+    const sc=isHero?1.25:0.82;
+    body.innerHTML=(isHero?`<circle cx="0" cy="-2" r="13" fill="${mode==='laut'?'rgba(56,189,248,.22)':'rgba(240,165,0,.24)'}" stroke="${mode==='laut'?'#38bdf8':'#f0a500'}" stroke-width=".9" stroke-dasharray="2 2"/>`:"")+buildVehicleBody(mode,isHero);
+    wrap.appendChild(body);
+    if(isHero){
+      const tag=document.createElementNS(NS,"text");
+      tag.setAttribute("x","0");
+      tag.setAttribute("y","-13");
+      tag.setAttribute("text-anchor","middle");
+      tag.setAttribute("class","map-sublbl");
+      tag.style.fontSize="8.5px";
+      tag.style.fill=mode==="laut"?"#7dd3fc":"#fde047";
+      tag.textContent=mode==="laut"?"KAPAL LAUT":"TRUK DARAT";
+      wrap.appendChild(tag);
+    }
+    sparkLayer.appendChild(wrap);
     const len=pathEl.getTotalLength();
-    const t0=performance.now();
+    const t0=performance.now()-startOffset*dur;
     function step(now){
+      if(!wrap.isConnected)return;
       const k=Math.min((now-t0)/dur,1);
-      const pt=pathEl.getPointAtLength(len*k);
-      sp.setAttribute("cx",pt.x.toFixed(1));
-      sp.setAttribute("cy",pt.y.toFixed(1));
+      const d1=len*k,d2=Math.min(len,d1+4);
+      const pt=pathEl.getPointAtLength(d1);
+      const pt2=pathEl.getPointAtLength(d2);
+      const dx=pt2.x-pt.x,dy=pt2.y-pt.y;
+      const flip=dx<0?-1:1;
+      const tilt=Math.atan2(dy,Math.abs(dx)||1)*(180/Math.PI)*0.38;
+      wrap.setAttribute("transform",`translate(${pt.x.toFixed(1)},${pt.y.toFixed(1)})`);
+      body.setAttribute("transform",`scale(${(flip*sc).toFixed(2)},${sc.toFixed(2)}) rotate(${tilt.toFixed(1)})`);
       if(k<1)requestAnimationFrame(step);
-      else sp.remove();
+      else wrap.remove();
     }
     requestAnimationFrame(step);
   }
 
-  let activePathEl=null;
+  let activePathEl=null,activeMode="darat";
   function updateCalc(adjustMin=false){
     const rt=ROUTES.find(r=>r.k===sel.value)||ROUTES[1];
     let kg=Math.max(100,parseInt(inpKg.value,10)||100);
@@ -505,6 +548,8 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
     if(provEls[rt.prov])provEls[rt.prov].classList.add("active");
 
     activeLayer.innerHTML="";
+    sparkLayer.querySelectorAll(".hero-veh").forEach(e=>e.remove());
+    activeMode=rt.t;
     if(rt.k!=="Jember"){
       const bg=document.createElementNS(NS,"path");
       bg.setAttribute("d",curve(HUB,rt.p,15));
@@ -514,7 +559,7 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
       ap.setAttribute("class","active-route");
       activeLayer.append(bg,ap);
       activePathEl=ap;
-      sendPulse(ap,"#ffffff",1200,3.2);
+      spawnVehicle(ap,rt.t,2200,true,0.42);
     }else{
       activePathEl=null;
     }
@@ -552,7 +597,7 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
 
     const bdg=$("#outBadge");
     bdg.className="mf-badge "+(rt.t==="laut"?"laut":"darat");
-    bdg.textContent=rt.t==="laut"?"Ekspedisi Laut":"Jalur Darat";
+    bdg.textContent=rt.t==="laut"?"🚢 Ekspedisi Kapal Laut":"🚛 Armada Truk Darat";
 
     $("#outTotal").textContent=fmtRp(total);
     $("#outKgNote").textContent=`Untuk ${fmtNum(kg)} kg (${ton} ton)`;
@@ -574,7 +619,7 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
       if(fx)fx.onclick=ev=>{ev.preventDefault();inpKg.value=rt.min;updateCalc(false);};
     }
 
-    const msg=`Halo CV. SRHJ, saya mau konfirmasi biaya upah angkut & jadwal pengiriman telur:\n\n• Tujuan: ${rt.nama} (${rt.kota})\n• Volume: ${fmtNum(kg)} kg (${ton} ton)\n• Jalur: ${rt.via}\n• Estimasi web: ${fmtRp(total)} (${fmtRp(rt.rp)}/kg · waktu tempuh ${rt.eta})`;
+    const msg=`Halo CV. SRHJ, saya mau konfirmasi biaya upah angkut & jadwal pengiriman telur:\n\n• Titik Asal: WORKSHOP CV.SRHJ\n• Tujuan: ${rt.nama} (${rt.kota})\n• Volume: ${fmtNum(kg)} kg (${ton} ton)\n• Armada: ${rt.via}\n• Estimasi web: ${fmtRp(total)} (${fmtRp(rt.rp)}/kg · waktu tempuh ${rt.eta})`;
     $("#cWa").href=`https://wa.me/${N}?text=${encodeURIComponent(msg)}`;
   }
 
@@ -594,14 +639,20 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
 
   updateCalc(false);
 
+  // Seed initial moving trucks & ships across Indonesia immediately
+  [0,5,11,18,24,30].forEach((ti,i)=>{
+    const tr=trails[ti%trails.length];
+    if(tr)spawnVehicle(tr.el,tr.r.t,tr.r.t==="laut"?3400:2300,false,(i*0.16)%0.85);
+  });
+
   let idx=0;
   setInterval(()=>{
     if(document.hidden)return;
     const tr=trails[idx%trails.length];
     idx++;
-    sendPulse(tr.el,tr.r.t==="laut"?"#60a5fa":"#4ade80",tr.r.t==="laut"?2300:1500,2.1);
-    if(activePathEl && idx%2===0)sendPulse(activePathEl,"#ffffff",1350,3);
-  },700);
+    spawnVehicle(tr.el,tr.r.t,tr.r.t==="laut"?3400:2300,false,0);
+    if(activePathEl && idx%2===0)spawnVehicle(activePathEl,activeMode,2200,true,0);
+  },850);
 })();
 
 </script>
