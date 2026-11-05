@@ -427,9 +427,13 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
 
   const fmtRp=n=>new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n);
   const fmtNum=n=>new Intl.NumberFormat("id-ID").format(n);
-  const curve=(a,b,arc=16)=>{
+  const ctrlPt=(a,b,arc=16)=>{
     const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1]-a[1],len=Math.hypot(dx,dy)||1;
-    return `M${a[0]},${a[1]} Q${(mx-dy/len*arc).toFixed(1)},${(my+dx/len*arc).toFixed(1)} ${b[0]},${b[1]}`;
+    return [mx-dy/len*arc,my+dx/len*arc];
+  };
+  const curve=(a,b,arc=16)=>{
+    const c=ctrlPt(a,b,arc);
+    return `M${a[0]},${a[1]} Q${c[0].toFixed(1)},${c[1].toFixed(1)} ${b[0]},${b[1]}`;
   };
 
   const provEls={};
@@ -460,8 +464,9 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
   renderOptions("all","Jawa Timur");
 
   const trails=ROUTES.filter(r=>r.k!=="Jember").map(r=>{
+    const c=ctrlPt(HUB,r.p,15);
     const el=document.createElementNS(NS,"path");
-    el.setAttribute("d",curve(HUB,r.p,15));
+    el.setAttribute("d",`M${HUB[0]},${HUB[1]} Q${c[0].toFixed(1)},${c[1].toFixed(1)} ${r.p[0]},${r.p[1]}`);
     el.setAttribute("class","trail");
     el.style.stroke=r.t==="laut"?"#60a5fa":"#4ade80";
     trailLayer.appendChild(el);
@@ -469,7 +474,7 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
     nd.setAttribute("cx",r.p[0]);nd.setAttribute("cy",r.p[1]);nd.setAttribute("r","1.9");
     nd.setAttribute("class","city-node");
     nodeLayer.appendChild(nd);
-    return {el,r};
+    return {el,r,c};
   });
 
   function buildVehicleBody(mode,isHero){
@@ -519,29 +524,29 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
     return {wrap,body,tag,sc:isHero?1.65:1.12};
   }
 
-  function placeVehicle(v,pathEl,k){
-    if(!pathEl)return;
-    const len=pathEl.getTotalLength();
-    if(!len)return;
-    const d1=len*k,d2=Math.min(len,d1+4);
-    const pt=pathEl.getPointAtLength(d1);
-    const pt2=pathEl.getPointAtLength(d2);
-    const dx=pt2.x-pt.x,dy=pt2.y-pt.y;
+  function placeBezier(v,p0,p1,p2,t){
+    const u=1-t;
+    const x=u*u*p0[0]+2*u*t*p1[0]+t*t*p2[0];
+    const y=u*u*p0[1]+2*u*t*p1[1]+t*t*p2[1];
+    const dx=2*u*(p1[0]-p0[0])+2*t*(p2[0]-p1[0]);
+    const dy=2*u*(p1[1]-p0[1])+2*t*(p2[1]-p1[1]);
     const flip=dx<0?-1:1;
     const tilt=Math.atan2(dy,Math.abs(dx)||1)*(180/Math.PI)*0.35;
-    v.wrap.setAttribute("transform",`translate(${pt.x.toFixed(1)},${pt.y.toFixed(1)})`);
+    v.wrap.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)})`);
     v.body.setAttribute("transform",`scale(${(flip*v.sc).toFixed(2)},${v.sc.toFixed(2)}) rotate(${tilt.toFixed(1)})`);
   }
 
-  // Persistent background fleet: 5 Truk Darat + 7 Kapal Laut across Indonesia
-  const bgIndices=[0,2,5,8,13,17,19,22,25,29,31,33];
+  // Persistent background fleet across Indonesia (5 Truk Darat + 7 Kapal Laut)
+  const bgIndices=[0,3,5,8,13,17,19,22,25,29,31,33];
   const fleet=bgIndices.map((idx,i)=>{
     const tr=trails[idx%trails.length];
     const node=createVehicleNode(tr.r.t,false);
-    return {node,tr,speed:tr.r.t==="laut"?0.00018:0.00026,phase:(i*0.19)%1};
+    const phase=0.18+((i*0.17)%0.68);
+    placeBezier(node,HUB,tr.c,tr.r.p,phase);
+    return {node,tr,speed:tr.r.t==="laut"?0.00018:0.00026,phase};
   });
 
-  let activePathEl=null,activeMode="darat",heroVeh=null;
+  let activeRt=null,activeCtrl=null,heroVeh=null;
   function updateCalc(adjustMin=false){
     const rt=ROUTES.find(r=>r.k===sel.value)||ROUTES[1];
     let kg=Math.max(100,parseInt(inpKg.value,10)||100);
@@ -554,20 +559,21 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
 
     activeLayer.innerHTML="";
     if(heroVeh){heroVeh.wrap.remove();heroVeh=null;}
-    activeMode=rt.t;
     if(rt.k!=="Jember"){
+      activeRt=rt;
+      activeCtrl=ctrlPt(HUB,rt.p,15);
+      const dStr=`M${HUB[0]},${HUB[1]} Q${activeCtrl[0].toFixed(1)},${activeCtrl[1].toFixed(1)} ${rt.p[0]},${rt.p[1]}`;
       const bg=document.createElementNS(NS,"path");
-      bg.setAttribute("d",curve(HUB,rt.p,15));
+      bg.setAttribute("d",dStr);
       bg.setAttribute("class","active-route-bg");
       const ap=document.createElementNS(NS,"path");
-      ap.setAttribute("d",curve(HUB,rt.p,15));
+      ap.setAttribute("d",dStr);
       ap.setAttribute("class","active-route");
       activeLayer.append(bg,ap);
-      activePathEl=ap;
       heroVeh=createVehicleNode(rt.t,true);
-      placeVehicle(heroVeh,ap,0.52);
+      placeBezier(heroVeh,HUB,activeCtrl,rt.p,0.52);
     }else{
-      activePathEl=null;
+      activeRt=null;activeCtrl=null;
     }
 
     const ring=document.createElementNS(NS,"circle");
@@ -646,24 +652,20 @@ const ROUTES=[{"k":"Jember","prov":"Jawa Timur","nama":"Jawa Timur — Dalam Kot
   updateCalc(false);
 
   const tStart=performance.now();
-  function animateFleet(now){
-    if(!document.hidden){
-      const dt=now-tStart;
-      for(let i=0;i<fleet.length;i++){
-        const f=fleet[i];
-        const k=0.08+((dt*f.speed+f.phase)%0.84);
-        placeVehicle(f.node,f.tr.el,k);
-      }
-      if(heroVeh && activePathEl){
-        const hk=0.12+((dt*0.00032+0.42)%0.76);
-        placeVehicle(heroVeh,activePathEl,hk);
-      }
+  function tickFleet(){
+    const dt=performance.now()-tStart;
+    for(let i=0;i<fleet.length;i++){
+      const f=fleet[i];
+      const k=0.10+((dt*f.speed+f.phase)%0.80);
+      placeBezier(f.node,HUB,f.tr.c,f.tr.r.p,k);
     }
-    requestAnimationFrame(animateFleet);
+    if(heroVeh && activeRt && activeCtrl){
+      const hk=0.14+((dt*0.00028+0.42)%0.72);
+      placeBezier(heroVeh,HUB,activeCtrl,activeRt.p,hk);
+    }
   }
-  requestAnimationFrame(animateFleet);
+  setInterval(tickFleet,40);
 })();
-
 </script>
 </body>
 </html>
