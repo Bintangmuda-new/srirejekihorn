@@ -103,13 +103,13 @@ ol.st{grid-template-columns:repeat(4,1fr)}
 .hud-tag{background:rgba(20,19,15,.84);backdrop-filter:blur(4px);border:1px solid #383429;color:#d6d1c2;font-size:.73rem;font-weight:700;padding:4px 9px;border-radius:6px;font-variant-numeric:tabular-nums}
 .hud-tag b{color:var(--y)}
 #mapSvg{display:block;width:100%;height:auto;touch-action:manipulation;user-select:none}
-.grat{stroke:#222019;stroke-width:.6}
-.grat.eq{stroke:#2e2b21;stroke-dasharray:4 4}
-.prov{fill:#26231b;stroke:#474234;stroke-width:.65;transition:fill .18s,stroke .18s;cursor:pointer}
-.prov:hover{fill:#383326;stroke:#998d73}
-.prov.active{fill:rgba(240,165,0,.3);stroke:var(--y);stroke-width:1.45}
-.trail{fill:none;stroke-width:1.1;stroke-linecap:round;stroke-dasharray:3 4;opacity:.24;pointer-events:none}
-.city-node{fill:#8c8573;opacity:.65;pointer-events:none}
+.grat{stroke:rgba(255,255,255,.11);stroke-width:.55}
+.grat.eq{stroke:rgba(240,165,0,.28);stroke-dasharray:4 4}
+.prov{fill:rgba(15,23,18,.04);stroke:rgba(255,255,255,.32);stroke-width:.6;transition:fill .18s,stroke .18s;cursor:pointer}
+.prov:hover{fill:rgba(240,165,0,.22);stroke:rgba(255,255,255,.85)}
+.prov.active{fill:rgba(240,165,0,.38);stroke:var(--y);stroke-width:1.55;filter:drop-shadow(0 0 8px rgba(240,165,0,.45))}
+.trail{fill:none;stroke-width:1.25;stroke-linecap:round;stroke-dasharray:3 4;opacity:.42;pointer-events:none}
+.city-node{fill:#fff;stroke:#0b131e;stroke-width:.8;opacity:.85;pointer-events:none}
 .active-route-bg{fill:none;stroke:rgba(240,165,0,.25);stroke-width:5.5;stroke-linecap:round;pointer-events:none}
 .active-route{fill:none;stroke:var(--y);stroke-width:2.3;stroke-linecap:round;stroke-dasharray:7 5;animation:dash 1s linear infinite;filter:drop-shadow(0 0 6px rgba(240,165,0,.85));pointer-events:none}
 @keyframes dash{to{stroke-dashoffset:-24}}
@@ -189,7 +189,7 @@ ol.st{grid-template-columns:repeat(4,1fr)}
 <div class="dist-card" id="distribusi">
 <div class="dist-top">
   <div>
-    <span class="dist-kicker">Peta Kendali Logistik · 34 Provinsi Indonesia</span>
+    <span class="dist-kicker">Citra Satelit Logistik · 34 Provinsi Indonesia</span>
     <h2>Alur Distribusi Nasional &amp; Kalkulator Biaya Angkut</h2>
     <p>Klik provinsi pada peta atau pilih wilayah tujuan di bawah untuk melihat simulasi rute pengiriman, estimasi biaya upah angkut per kg, dan waktu tempuh dari Gudang Jember.</p>
   </div>
@@ -201,7 +201,9 @@ ol.st{grid-template-columns:repeat(4,1fr)}
     <span class="hud-tag">KAPASITAS: <b>20 TON / HARI</b></span>
     <span class="hud-tag" id="hudDest">TUJUAN: <b>SURABAYA / MALANG</b></span>
   </div>
-  <svg id="mapSvg" viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Peta Interaktif Alur Distribusi Telur CV. SRI REJEKI HORN JEMBER ke 34 Provinsi Indonesia">
+  <svg id="mapSvg" viewBox="0 0 1000 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Peta Citra Satelit Alur Distribusi Telur CV. SRI REJEKI HORN JEMBER ke 34 Provinsi Indonesia">
+    <image href="/assets/sat-id.jpg" x="0" y="0" width="1000" height="420" preserveAspectRatio="none"/>
+    <rect x="0" y="0" width="1000" height="420" fill="rgba(8,14,22,0.18)"/>
     <g id="gratLayer"><line x1="10.6" y1="0" x2="10.6" y2="420" class="grat"/><line x1="117.0" y1="0" x2="117.0" y2="420" class="grat"/><line x1="223.4" y1="0" x2="223.4" y2="420" class="grat"/><line x1="329.8" y1="0" x2="329.8" y2="420" class="grat"/><line x1="436.2" y1="0" x2="436.2" y2="420" class="grat"/><line x1="542.6" y1="0" x2="542.6" y2="420" class="grat"/><line x1="648.9" y1="0" x2="648.9" y2="420" class="grat"/><line x1="755.3" y1="0" x2="755.3" y2="420" class="grat"/><line x1="861.7" y1="0" x2="861.7" y2="420" class="grat"/><line x1="968.1" y1="0" x2="968.1" y2="420" class="grat"/><line x1="0" y1="369.7" x2="1000" y2="369.7" class="grat"/><line x1="0" y1="263.2" x2="1000" y2="263.2" class="grat"/><line x1="0" y1="156.8" x2="1000" y2="156.8" class="grat eq"/><line x1="0" y1="50.3" x2="1000" y2="50.3" class="grat"/></g>
     <g id="provLayer"></g>
     <g id="trailLayer"></g>
