@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>E-NOTA CV.SRHJ v4.5.0 — Unduh APK</title>
+<title>E-NOTA CV.SRHJ v4.5.1 — Unduh APK</title>
 <style>
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: #0d0d0d; color: #f5f5f5; }
   .wrap { max-width: 560px; margin: 0 auto; padding: 32px 20px 48px; }
@@ -27,23 +27,25 @@
 <body>
 <div class="wrap">
   <div class="logo">CV. SRI REJEKI HORN JEMBER</div>
-  <h1>E-NOTA <span>v4.5.0</span></h1>
+  <h1>E-NOTA <span>v4.5.1</span></h1>
   <p class="sub">Jurnal Penjualan Telur — aplikasi Android CV. Sri Rejeki Horn Jember</p>
 
   <div class="card">
-    <button class="btn" id="unduhBtn" onclick="unduhApk()">⬇ UNDUH APK (2,4 MB)</button>
+    <button class="btn" id="unduhBtn" onclick="unduhApk()">⬇ UNDUH APK (2,5 MB)</button>
     <p style="text-align:center;color:#999;font-size:13px;margin:12px 0 0" id="statusUnduh">Ketuk tombol di atas untuk mengunduh.</p>
   </div>
 
-  <div class="warn">
-    <b>⚠ Perhatian — file ini masih UNSIGNED.</b><br>
-    APK ini <b>belum bisa di-install</b> sebelum ditandatangani di PC dengan keystore asli SRHJ
-    (sertifikat harus sama dengan v4.4.5). Setelah di-sign, file hasil sign akan diganti di link ini juga.
+  <div class="warn" style="background:#0e2a12;border-color:#4caf50">
+    <b>✅ Siap install — APK ini sudah ditandatangani.</b><br>
+    <b>PENTING: uninstall dulu E-NOTA lama</b> di HP sebelum install yang ini (sertifikat baru, beda dengan versi lama),
+    lalu <b>sign in lagi</b> di aplikasi untuk memulihkan data transaksi dari server. Pastikan semua transaksi sudah
+    tersinkron sebelum uninstall.
   </div>
 
   <div class="card" style="margin-top:16px">
     <h2>Yang baru di v4.5.0</h2>
     <ul>
+      <li><b>Sudah ditandatangani — langsung bisa di-install</b> (keystore baru SRHJ)</li>
       <li>PRINT nota kini teks ESC/POS native (DantSu) — bukan lagi gambar bitmap</li>
       <li>Judul, nama pelanggan &amp; TOTAL BAYAR tercetak besar; rincian kolom kiri-kanan</li>
       <li>Logo, tanda tangan, selfie &amp; aksara Jawa tetap tercetak sebagai gambar</li>
@@ -54,21 +56,22 @@
   <div class="card">
     <h2>Detail file</h2>
     <div class="meta">
-      <div>Nama file: <b>JurnalPenjualanTelur-CV-SRHJ-v4.5.0-unsigned-aligned.apk</b></div>
-      <div>Versi: <b>4.5.0</b> (versionCode 21) · Paket: <b>com.srirejekihorn.jurnal</b></div>
-      <div>Ukuran: <b>2.515.546 byte</b> · Android minimal: <b>6.0</b></div>
-      <div>SHA-256:<br><code>9ec01db708fae6b271e5371351de16900175c9928456e22ebc1d7ad0761edd8f</code></div>
-      <div>Dibangun: <b>9 November 2026</b></div>
+      <div>Nama file: <b>JurnalPenjualanTelur-CV-SRHJ-v4.5.1.apk</b></div>
+      <div>Versi: <b>4.5.1</b> (versionCode 22) · Paket: <b>com.srirejekihorn.jurnal</b></div>
+      <div>Ukuran: <b>2525454 byte</b> · Android minimal: <b>6.0</b></div>
+      <div>SHA-256:<br><code>ffd9d03e9599eda50b7ebb6c432f0ae22800cfb16874880c0fa7e53da2406441</code></div>
+      <div>Dibangun: <b>10 November 2026</b></div>
     </div>
   </div>
 
   <div class="card">
     <h2>Cara install (setelah file di-sign)</h2>
     <ol>
+      <li>Di aplikasi E-NOTA lama, pastikan semua transaksi sudah tersinkron.</li>
+      <li>Uninstall aplikasi E-NOTA lama dari HP.</li>
       <li>Unduh APK dari tombol di atas.</li>
       <li>Di HP, izinkan “Install aplikasi tidak dikenal” untuk Chrome.</li>
-      <li>Buka file APK hasil unduhan, ketuk Install.</li>
-      <li>Update dari versi lama tidak menghapus data transaksi.</li>
+      <li>Buka file APK hasil unduhan, ketuk Install, lalu sign in untuk memulihkan data.</li>
     </ol>
   </div>
 
@@ -76,7 +79,7 @@
 </div>
 <script>
 var APK_URL = "https://raw.githubusercontent.com/Bintangmuda-new/srirejekihorn/main/enota/apk.b64";
-var APK_NAME = "JurnalPenjualanTelur-CV-SRHJ-v4.5.0-unsigned-aligned.apk";
+var APK_NAME = "JurnalPenjualanTelur-CV-SRHJ-v4.5.1.apk";
 function unduhApk() {
   var status = document.getElementById("statusUnduh");
   var btn = document.getElementById("unduhBtn");
